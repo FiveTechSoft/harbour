@@ -286,6 +286,11 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_MT),)
       $(info ! HB_MT: $(HB_MT))
    endif
+   ifeq ($(HB_COMPILER),zig)
+      ifneq ($(HB_ZIG_TARGET),)
+         $(info ! HB_ZIG_TARGET: $(HB_ZIG_TARGET))
+      endif
+   endif
 endif
 
 # Shell detection
@@ -1748,6 +1753,12 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),aix)
          HB_PRGFLAGS += -D__PLATFORM__AIX -D__PLATFORM__UNIX
+      else
+      ifeq ($(HB_PLATFORM),wasm)
+         HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX -D__PLATFORM__WASM
+         # NOTE: __PLATFORM__LINUX here definitely is a hack, remove
+         # if WASM platform settles more (it's currently emscripten oriented)
+      endif
       endif
       endif
       endif
@@ -1769,8 +1780,18 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
          ifneq ($(filter $(HB_CPU),x86 arm),)
             HB_PRGFLAGS += -D__ARCH32BIT__
          else
-         ifneq ($(filter $(HB_CPU),x86_64 ia64),)
+         ifneq ($(filter $(HB_CPU),x86_64 ia64 sparc64 ppc64 arm64),)
+            # NOTE: MIPS64 is not yet distinctly recognized by the build system
             HB_PRGFLAGS += -D__ARCH64BIT__
+         else
+         ifeq ($(HB_CPU),alpha)
+            # Alpha began as 64-bit CPU, only WinNT releases were limited to 32-bit
+            ifeq ($(HB_PLATFORM),win)
+               HB_PRGFLAGS += -D__ARCH32BIT__
+            else
+               HB_PRGFLAGS += -D__ARCH64BIT__
+            endif
+         endif
          endif
          endif
       endif
