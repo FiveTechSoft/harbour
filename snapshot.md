@@ -36,6 +36,10 @@ available on [GitHub Releases]({{ site.releases_url }}).
 Windows nightly binaries are built from the live repository and published on
 [SourceForge]({{ site.dl_url }}). These development packages are _not_
 intended for production use; for production, use the stable release above.
+
+Pre-built Windows binaries from automated multi-flavour builds are available
+from [Harbour_builder]({{ site.binaries_url }})
+([releases]({{ site.binaries_releases_url }})).
 {% endif %}
 
 If you do encounter a bug, please test the latest snapshot build to see if it
@@ -46,9 +50,15 @@ has already been fixed before reporting it.
 To download latest development sources, go to the
 [Project Status]({{ site.baseurl }}/#project-status) section on the main page.
 {% if site.fork %}
-To download snapshot or stable binaries of Harbour, visit [here]({{ site.dl_url }}).
+To download snapshot or stable binaries of Harbour, visit [here]({{ site.dl_url }})
+or [Harbour_builder]({{ site.binaries_url }})
+([releases]({{ site.binaries_releases_url }})).
 {% else %}
-To download nightly or stable release of Harbour, visit
+To download **Windows binaries**, visit
+[Harbour_builder]({{ site.binaries_url }})
+([releases]({{ site.binaries_releases_url }})).
+
+To download nightly packages or source archives, visit
 [SourceForge]({{ site.dl_url }}) or
 [GitHub Releases]({{ site.releases_url }}).
 {% endif %}

@@ -51,7 +51,9 @@
       <a class="dropbtn" href="{{ site.dl_url }}">
       {% include svg/ri-download-2-line.svg %}<span class="menu-text">Download</span></a>
       <nav class="dropdown-content">
-        <a href="{{ site.dl_url }}">Source and Binaries</a>
+        <a href="{{ site.binaries_url }}">Windows Binaries (Harbour_builder)</a>
+        <a href="{{ site.binaries_releases_url }}">Binary Releases</a>
+        <a href="{{ site.dl_url }}">Source and Binaries (SourceForge)</a>
 {%- if site.fork %}
         <a href="{{ site.baseurl }}/snapshot{{ site.ilink_suffix }}">Snapshot Build</a>
 {%- else %}
