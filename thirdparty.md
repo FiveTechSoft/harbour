@@ -15,11 +15,11 @@ These are some links to Harbour related 3rd party tools and libraries.
 
 # Free and Open Source
 
-## [HarbourBuilder](https://github.com/FiveTechSoft/HarbourBuilder)
+## [HarbourBuilder](https://fivetechsoft.github.io/HarbourBuilder/)
 
 **Open source and free** visual development environment for Harbour by FiveTech Soft.
 Includes an IDE and tooling for building Harbour applications.
-Website: [fivetechsoft.github.io/HarbourBuilder](https://fivetechsoft.github.io/HarbourBuilder/).
+Source: [github.com/FiveTechSoft/HarbourBuilder](https://github.com/FiveTechSoft/HarbourBuilder).
 
 ## [hbgi](https://github.com/tuffnatty/hbgi)
 
