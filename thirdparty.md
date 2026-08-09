@@ -17,7 +17,7 @@ These are some links to Harbour related 3rd party tools and libraries.
 
 ## [HarbourBuilder](https://github.com/FiveTechSoft/HarbourBuilder)
 
-Visual development environment for Harbour by FiveTech Soft.
+**Open source and free** visual development environment for Harbour by FiveTech Soft.
 Includes an IDE and tooling for building Harbour applications.
 Website: [fivetechsoft.github.io/HarbourBuilder](https://fivetechsoft.github.io/HarbourBuilder/).
 
