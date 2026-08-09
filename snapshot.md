@@ -13,7 +13,7 @@ after every push.
 The latest stable release is **{{ site.stable_version }}** ({{ site.stable_date }}),
 available on [GitHub Releases]({{ site.releases_url }}).
 
-Pre-built Windows binaries from automated multi-flavour builds are available
+Pre-built binaries from automated multi-flavour builds are available
 from [Harbour_builder]({{ site.binaries_url }})
 ([releases]({{ site.binaries_releases_url }})).
 
@@ -22,7 +22,7 @@ from [Harbour_builder]({{ site.binaries_url }})
 To download latest development sources, go to the
 [Project Status]({{ site.baseurl }}/#project-status) section on the main page.
 
-To download **Windows binaries**, visit
+To download **Binaries**, visit
 [Harbour_builder]({{ site.binaries_url }})
 ([releases]({{ site.binaries_releases_url }})).
 
