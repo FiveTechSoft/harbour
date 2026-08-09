@@ -39,6 +39,6 @@ defaults:
     values:
       layout: example
 
-incremental: true
+# incremental: true  # disabled: can break GitHub Pages builds
 sass:
   style: compressed
