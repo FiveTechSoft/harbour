@@ -12,7 +12,7 @@ site_branch: main
 site_root: ""
 dl_url: https://sourceforge.net/projects/harbour-project/files/
 releases_url: https://github.com/harbour/core/releases
-binaries_url: https://github.com/FiveTechSoft/Harbour_builder
+binaries_url: https://fivetechsoft.github.io/Harbour_builder/
 binaries_releases_url: https://github.com/FiveTechSoft/Harbour_builder/releases
 short_version: "3.2"
 stable_version: "3.2.0"
