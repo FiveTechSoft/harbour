@@ -1,0 +1,42 @@
+# GitHub Project Pages for FiveTechSoft/harbour
+# Live at https://fivetechsoft.github.io/harbour/
+url: "https://fivetechsoft.github.io"
+baseurl: "/harbour"
+
+# https://pages.github.com/versions/
+fork: false
+repo_slug: harbour/core
+site_slug: harbour/harbour.github.io
+repo_branch: master
+site_branch: main
+site_root: ""
+dl_url: https://sourceforge.net/projects/harbour-project/files/
+releases_url: https://github.com/harbour/core/releases
+short_version: "3.2"
+stable_version: "3.2.0"
+stable_date: "2026-07-07"
+dev_version: "3.2.1dev"
+stable_source_url: https://github.com/harbour/core/releases/download/v3.2.0/harbour-3.2.0.src.tar.gz
+license_file: COPYING.txt
+
+exclude: ['*.pem', '*.sh']
+
+example_categories:
+  - basic
+  - arrays
+  - database
+  - extensions
+  - web
+collections:
+  example:
+    output: true
+defaults:
+  - scope:
+      path: ""
+      type: example
+    values:
+      layout: example
+
+incremental: true
+sass:
+  style: compressed

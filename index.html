@@ -1,51 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Harbour — FiveTechSoft</title>
-  <style>
-    :root { color-scheme: light dark; --bg: #0f1419; --fg: #e7ecf1; --muted: #9aa7b5; --accent: #3d9cf0; --card: #1a2332; }
-    @media (prefers-color-scheme: light) {
-      :root { --bg: #f6f8fa; --fg: #1f2328; --muted: #656d76; --accent: #0969da; --card: #fff; }
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.55; }
-    main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.25rem; }
-    h1 { font-size: 1.85rem; margin: 0 0 .5rem; }
-    p { color: var(--muted); margin: .6rem 0; }
-    .card { background: var(--card); border: 1px solid color-mix(in srgb, var(--muted) 25%, transparent); border-radius: 12px; padding: 1.25rem 1.4rem; margin: 1.5rem 0; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    ul { padding-left: 1.2rem; color: var(--muted); }
-    li { margin: .35rem 0; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
-    footer { margin-top: 2.5rem; font-size: .85rem; color: var(--muted); }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Harbour</h1>
-    <p>Cross-platform compiler for the xBase superset language. This site is the <strong>FiveTechSoft</strong> fork of the official project.</p>
-    <div class="card">
-      <p><strong>Repository</strong></p>
-      <ul>
-        <li><a href="https://github.com/FiveTechSoft/harbour">FiveTechSoft/harbour</a> (this fork)</li>
-        <li><a href="https://github.com/harbour/core">harbour/core</a> (upstream)</li>
-        <li><a href="https://harbour.github.io/">Official Harbour site</a></li>
-      </ul>
+---
+layout: default
+---
+<h1>Overview</h1>
+<div class="text-j"><p>
+  Harbour is the open/free software implementation of a cross-platform,
+  multi-threading, object-oriented, scriptable programming language, backwards
+  compatible with xBase languages. Harbour consists of a compiler and runtime
+  libraries with multiple UI, database and I/O backends, its own build system
+  and a collection of libraries and bindings for popular APIs.
+  With Harbour, you can build apps running on GNU/Linux, Windows, macOS, iOS,
+  Android, *BSD, *nix, and more.
+  <a href="{{ site.baseurl }}/about{{ site.ilink_suffix }}" class="readmore">Learn more</a>
+</div>
+
+{%- if site.fork %}
+<h1 id="this-fork">This Fork</h1>
+<div class="text-j"><p>
+  This fork contains all <a href="https://harbour.github.io/">mainline</a>
+  updates as well as local fixes, additions, extra contribs, better tooling
+  and maintenance.
+  <a href="{{ site.baseurl }}/forks{{ site.ilink_suffix }}" class="readmore">Learn more</a>
+</div>
+{%- endif %}
+
+<div class="why-box">
+  <div class="why-items">
+    <h1>Why use it?</h1>
+    <ul>
+      <li>Harbour is <strong>free software</strong>, 100% compatible with Clipper compilers.
+      <li>Harbour is proven to be <strong>stable</strong>, <strong>robust</strong> and <strong>efficient</strong>.
+      <li>Harbour is <strong>portable</strong> across multiple operating systems with the same code base.
+      <li>You can use it to develop either free/open source or nonfree applications.
+        <a href="{{ site.baseurl }}/about{{ site.ilink_suffix }}#why-use-it" class="readmore readmore-dark">Learn more</a>
+    </ul>
+  </div>
+  <div class="status-box">
+    <h1 id="project-status">Project Status</h1>
+    <p>
+{%- if site.fork %}
+      <a href="https://ci.appveyor.com/project/vsz/hb/branch/main"><img src="https://ci.appveyor.com/api/projects/status/4rd806hk73q83qo4/branch/main?svg=true" height="20" alt="Build Status"></a>
+{%- else %}
+      <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/linux-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/linux-ci.yml/badge.svg" height="20" alt="Linux CI"></a>&nbsp;
+      <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/windows-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/windows-ci.yml/badge.svg" height="20" alt="Windows CI"></a>&nbsp;
+      <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/macos-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/macos-ci.yml/badge.svg" height="20" alt="macOS CI"></a>
+{%- endif %}
+      <br>
+      Latest stable:&nbsp;
+      <strong>{{ site.stable_version }}</strong>&nbsp;({{ site.stable_date }})&nbsp;
+      <a href="{{ site.stable_source_url }}"><strong>.tar.gz</strong></a><br>
+      Latest development:&nbsp;
+      <strong>{% if site.fork %}{{ site.full_version }}{% else %}{{ site.dev_version }}{% endif %}</strong><br>
+      Source snapshot:&nbsp;
+      <a href="https://github.com/{{ site.repo_slug }}/archive/{{ site.repo_branch }}.zip"><strong>.zip</strong></a>&nbsp;
+      <a href="https://github.com/{{ site.repo_slug }}/archive/{{ site.repo_branch }}.tar.gz"><strong>.tar.gz</strong></a><br>
+{%- if site.fork %}
+      Binary snapshot (Windows):&nbsp;
+      <a href="{{ site.dl_url }}/download/v{{ site.full_version }}/harbour-snapshot-win.zip" tooltip-text="clang / mingw-w64, 64-bit hosted, 32/64-bit targets, bundled with latest curl and TLS/SSL libraries." class="tooltip"><strong>.zip</strong></a>
+{%- else %}
+      Nightly binary (Win):&nbsp;
+      <a href="{{ site.dl_url }}binaries-windows/nightly/harbour-nightly-win.exe/download"><strong>.exe</strong></a>&nbsp;
+      <a href="{{ site.dl_url }}binaries-windows/nightly/harbour-nightly-win.7z/download"><strong>.7z</strong></a><br>
+      GitHub:&nbsp;
+      <a href="{{ site.releases_url }}"><strong>Releases</strong></a>&nbsp;
+      <a href="https://github.com/{{ site.repo_slug }}"><strong>Source</strong></a><br>
+{%- endif %}
+    </p>
+    <span class="dl-button"><a href="{{ site.releases_url }}" class="readmore-norm">GitHub Releases</a></span>
+    <span class="dl-button"><a href="{{ site.dl_url }}" class="readmore-norm">SourceForge</a></span>
+  </div>
+</div>
+
+<div class="feature-box">
+  <h1>Features</h1>
+  <div>
+    <div>
+      {% include svg/ri-database-2-line.svg %}
+      Native RDDs, SQL, ODBC
     </div>
-    <div class="card">
-      <p><strong>Quick links</strong></p>
-      <ul>
-        <li><a href="https://github.com/FiveTechSoft/harbour/releases">Releases</a></li>
-        <li><a href="https://github.com/FiveTechSoft/harbour/blob/master/README.md">README</a></li>
-        <li><a href="https://github.com/FiveTechSoft/harbour/blob/master/LICENSE.txt">License</a></li>
-      </ul>
+    <div>
+      {% include svg/ri-dashboard-line.svg %}
+      <br>Support for modern standards: JSON, SSL, TCP/IP, XML, …
     </div>
-    <footer>
-      GitHub Pages for <code>FiveTechSoft/harbour</code> · source branch <code>gh-pages</code>
-    </footer>
-  </main>
-</body>
-</html>
+    <div>
+      {% include svg/ri-smartphone-line.svg %}
+      <br>Cross-platform: 64-bit, mobile, Mac, Linux, BSD, ARM, …
+    </div>
+    <div>
+      {% include svg/ri-macbook-line.svg %}
+      <br>Console, TUI, GUI, service/daemon, web apps
+    </div>
+    <div>
+      {% include svg/ri-bubble-chart-line.svg %}
+      <br>Third-party libs with additional features
+    </div>
+    <div>
+      {% include svg/ri-lightbulb-line.svg %}
+      <br>Team of experienced and capable developers
+    </div>
+  </div>
+</div>
+
+<div class="license-box">
+  <h1>License</h1>
+  <p>Harbour is a free and open source project. It can be used to make open source
+  applications, free or nonfree products.
+  <a href="https://raw.githubusercontent.com/{{ site.repo_slug }}/{{ site.repo_branch }}/{{ site.license_file }}" class="readmore readmore-dark">Learn more</a>
+</div>
+
+<div class="lower-box">
+  <div class="news-box">
+    <h1>Development News
+      &nbsp;<a href="https://github.com/{{ site.site_slug }}/edit/{{ site.site_branch }}/{{ site.site_root }}_data/news.yml">{% include svg/ri-edit-line.svg %}</a></h1>
+    <hr>
+
+    <dl class="news">
+{%- assign time_range = 7 | times: 365 | times: 86400 %}
+{%- capture limit %}{{ site.time | date: '%s' | minus: time_range | date: '%F' }}{% endcapture %}
+{%- for story in site.data.news %}
+{%- capture itemd %}{{ story.date | date: '%F' }}{% endcapture %}
+{%- if itemd >= limit %}
+{%- if story.text %}
+      <dt>{{ story.date }}
+      <dd><strong>{{ story.title }}</strong>
+        <p>{{ story.text }}
+{% endif %}
+{%- endif %}
+{%- endfor %}
+      <dd>See the <a href="{{ site.baseurl }}/news{{ site.ilink_suffix }}">news archive</a> for past articles.
+    </dl>
+  </div>
+
+  <aside class="miniexample-box">
+    <h2>Code Examples</h2>
+    <hr>
+    <dl class="miniexample">
+{%- assign selection = "hello|foreach|parseini|tbrowse|onidle" | split: "|" %}
+{%- assign examples_sorted = site.example | sort: 'slug' %}
+{%- for selected_example in selection %}
+{%- for example in examples_sorted %}
+{%- if example.slug == selected_example %}
+      <dt><a href="{{ site.baseurl }}/example/{{ example.slug }}">{{ example.title_long }}</a>
+      <dd>{{ example.description }}
+{% endif %}
+{%- endfor %}
+{%- endfor %}
+    </dl>
+  </aside>
+</div>
