@@ -106,7 +106,6 @@ static int          s_iLineBufSize = 0;
 static char *       s_sLineBuf;
 static HB_SIZE      s_nTransBufSize = 0;
 static char *       s_sTransBuf;
-static const char * s_szCrLf;
 static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
 static int          s_iCursorStyle;
 static HB_BOOL      s_bStdinConsole;
@@ -467,7 +466,6 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_cdpTerm = s_cdpHost = NULL;
    s_fDispTrans = HB_FALSE;
 
-   s_szCrLf = hb_conNewLine();
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
