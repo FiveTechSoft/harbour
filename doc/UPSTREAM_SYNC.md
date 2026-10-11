@@ -10,7 +10,7 @@ Directed SQLite multithreaded tests passed for disk and memory databases, 3614 c
 
 ## Clang portability
 
-Clang 23.1.3 adds diagnostics for global variables assigned but never read. The failure also occurred before the upstream merge. Four RDD modules (DBF, DBFCDX, DBFNTX and DBFNSX) held unused RDD-id bookkeeping. GT PCA held an unused cached newline length. Removing that dead state preserves the registration calls and the newline string used for output.
+Clang 23.1.3 adds diagnostics for global variables assigned but never read. The failure also occurred before the upstream merge. Four RDD modules (DBF, DBFCDX, DBFNTX and DBFNSX) held unused RDD-id bookkeeping. GT PCA held an unused cached newline string and its length. Neither was read by the output path. Removing that dead state preserves the RDD registration calls and console output behavior.
 
 The symbol pointer declared by hbinit.h is different: generated pcode uses the pointer returned by hb_vmProcessSymbols, but native-only registration modules do not. Its declaration is marked optional only for Clang. Registration and pcode execution semantics are unchanged. CI warnings and warnings-as-errors remain enabled; there is no broad warning suppression.
 
