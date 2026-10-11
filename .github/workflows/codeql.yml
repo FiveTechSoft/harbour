@@ -1,0 +1,40 @@
+name: CodeQL advanced
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+  schedule:
+    - cron: '27 22 * * 4'
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: c-cpp
+            build-mode: manual
+          - language: javascript-typescript
+            build-mode: none
+          - language: ruby
+            build-mode: none
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+      - name: Build core only for C/C++ analysis
+        if: matrix.language == 'c-cpp'
+        run: make -j2 HB_COMPILER=gcc HB_BUILD_CONTRIBS=no
+      - name: Test core
+        if: matrix.language == 'c-cpp'
+        run: bin/linux/gcc/hbtest
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}
