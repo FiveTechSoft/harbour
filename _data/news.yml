@@ -1,8 +1,8 @@
 ---
 - date: 2026-07-07
-  title: <a href="https://github.com/harbour/core/releases/tag/v3.2.0">Release 3.2.0</a>
+  title: <a href="https://github.com/harbour/core/releases/tag/v3.2.0">Upstream release 3.2.0</a>
   text: After fifteen years of development since 3.0.0, Harbour 3.2.0 is now
-    available as an official stable release. Source packages are published on
+    available as an upstream stable release. Source packages are published on
     GitHub Releases. The homepage has been updated with CI badges, current
     version information, and direct download links.
 - date: 2016-10-20
