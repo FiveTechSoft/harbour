@@ -120,7 +120,6 @@ static int hb_cdxPageRootSplit( LPCDXPAGE pPage );
 /* free create index structure */
 static void hb_cdxSortFree( LPCDXSORTINFO pSort );
 
-static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;
 
 static RDDFUNCS cdxSuper;
 
@@ -9998,11 +9997,10 @@ static const RDDFUNCS cdxTable =
 HB_FUNC_STATIC( _GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
+   HB_USHORT * puiCount, * puiSuperRddId;
 
    puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    HB_TRACE( HB_TR_DEBUG, ( HB_CDXRDD "_GETFUNCTABLE(%p, %p)", ( void * ) puiCount, ( void * ) pTable ) );
@@ -10018,14 +10016,6 @@ HB_FUNC_STATIC( _GETFUNCTABLE )
          errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBFDBT", puiSuperRddId );
       if( errCode != HB_SUCCESS )
          errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBF", puiSuperRddId );
-      if( errCode == HB_SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
       hb_retni( errCode );
    }
    else
