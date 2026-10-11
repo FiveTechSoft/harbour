@@ -7,6 +7,165 @@
    Entries may not always be in chronological/commit order.
    See license at the end of file. */
 
+2026-10-10 15:24 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbunix/sigkill.c
+    ! typo in non Linux branch...
+
+2026-10-10 14:38 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbtip/hbtip.hbc
+  * contrib/hbtip/hbtip.hbp
+  * contrib/hbtip/client.prg
+    ! fix order of SSL_shutdown() call, use ERR_clear_error()
+
+    * on Linux, in SSL mode check current state of SIGPIPE handler,
+      toggle to ignore if necessary (hbtip now depends on hbunix contrib
+      when building on Linux)
+
+    * on other Unix systems call hb_socketSetNoSigPipe() before passing
+      socket to OpenSSL
+
+  * contrib/hbssl/err.c
+  * contrib/hbssl/hbssl.hbx
+    + ERR_clear_error() wrapper
+
+  * contrib/hbunix/hbposix.h
+  * contrib/hbunix/hbunix.hbp
+  * contrib/hbunix/hbunix.hbx
+  + contrib/hbunix/sigkill.c
+    + attempt to implement portable interface to reach basic signal
+      handler setup. Many signal numbers vary between UNIX implementations,
+      functions are currently tied to signal name:
+      "SIGINT", "sigint" or "INT" - are accepted forms to <cSignal>
+
+      Added functions:
+      posix_kill( <nPid>[, <cSignal> = "SIGNULL" ] ) -> 0 (success), -1
+      posix_signal( <cSignal>, .T. (ignore signal) / .F. (default action)
+        -> <lWasIgnored> / NIL ( error or custom handler set previously )
+      unix_signalToNum( <cSignal> ) -> <iSignal>
+      unix_numToSignal( <iSignal>[, <lShort> = .F. ] ) -> <cSignal>
+
+      Currently enabled on Linux only:
+      unix_sigactionGet( <cSignal> )
+       -> <lIsIgnored> / NIL ( error or custom handler )
+
+      Function prototypes may not be final. Use posix_errno() in case
+      of failure.
+
+  + contrib/hbunix/tests/sigpipe.prg
+    + self-test SIGPIPE kill attempt
+
+2026-09-29 22:08 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * src/compiler/hbcmplib.c
+    ! fix to not create zero-len argv entries from such invocations:
+      hb_compileFromBuf( "harbour", "-n", "-q", "", "test.prg")
+      Before the fix this resulted in "Error F0036  Invalid filename ''".
+      It doesn't mean you should let go with extra empty parameters, but
+      the code either shouldn't pass absolutely non-standard argv array
+      element to hb_compMainExt().
+      #418 - issue reported by Giuliano Puppis - thanks!
+
+2026-09-29 21:51 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbssl/hbssl.hbp
+    * added OpenSSL 4 .dll names, platform filtered others
+      that were arch specific.
+
+  * include/hbxvm.h
+    ! c&p typo
+
+2026-09-29 21:37 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/rddsql/hbrddsql.h
+  * contrib/rddsql/sqlbase.c
+    * reshaped SQLBASE RDD for multi-threading. There are
+      now separate connection tables for each thread and also
+      a global one (either for compatibility with old SQLBASE
+      or scenarios that fit for serialized RDBMS access).
+      SQLMIX should inherit these features, as it didn't have
+      non MT-safe elements.
+
+    + RDDI_CONNECT method now supports "THREAD:" and "GLOBAL:"
+      prefixes in the driver specifier, for example:
+      RDDINFO( RDDI_CONNECT, {"THREAD:SQLITE3", "..."} )
+
+      NOTE: "GLOBAL:" mode is the current default when prefix is
+            not specified, still that may change in the future.
+            If you want to keep connections in global state please
+            add explicit "GLOBAL:" prefix.
+
+    * RDDIINFO( RDDI_CONNECTION, <nConnection> ) is now per-thread
+      isolated value. Also after spawning a new thread, to access
+      already established global connection, the value has to be
+      assigned again.
+      [INCOMPATIBLE]
+
+    + added pSDD->EngineFlags bit-flags (SDDNODE struct):
+      SQLDD_EFLAG_CAN_CREATE - driver supports creating (temp)table
+      SQLDD_EFLAG_MT_AWARE   - driver is optimized/safe for MT mode
+
+  * contrib/sddfb/core.c
+  * contrib/sddmy/core.c
+  * contrib/sddoci/core.c
+    * marked as non-MT aware, per driver Mutex will
+      be used for such connections in global scope.
+      To protect SQL Transactions retain .prg mutexes,
+      which you should already have in place if been
+      using SDD in MT.
+
+    ! dbCreate()/dbGoto() GPF is fixed by _not_ declaring
+      SQLDD_EFLAG_CAN_CREATE. DBCreate() now falls back
+      to SDDNULL as parent driver when MYSQL, OCILIB,
+      FIREBIRD are in focus.
+
+  * contrib/sddodbc/core.c
+  * contrib/sddpg/core.c
+    * marked as non-MT aware, can be used in global
+      scope as they have always been. These are the next
+      candidates for MT conversion.
+
+  * contrib/sddsqlt3/core.c
+    * multi-threading is now enabled in SQLite SDD.
+      That is as long as it is version 3.6.4+ and was compiled
+      with SQLITE_THREADSAFE=[1 or 2]. Any other builds are
+      detected as unsafe using runtime sqlite3_threadsafe()
+      call.
+
+    + implemented RDDI_INSERTID: it is mapped to SQLite
+      ROWID of last inserted row, that should also
+      transparently map to PRIMARY KEY if it's defined
+      as single integer column.
+
+    + with SQLite >= 3.6.4 SDD now uses sqlite_open_v2()
+      call to open a connection
+
+  + contrib/sddsqlt3/tests/mttest.prg
+    + small stress-test for SQLite multi-threading, testing
+      both THREAD: and GLOBAL: spaces. On-file multi-threading
+      is quite slow, but the tests can also run in-memory.
+      Specify any parameter to switch this mode: ./mttest mem
+
+2026-09-18 11:37 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * doc/en/langall.txt
+    + list missing codepage DE858 in hb_cdpSelect() doc entry
+      noticed by DF7BE - Wilfried Brunken in #416 - thanks!
+
+2026-09-15 18:27 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbhttpd/core.prg
+    ! fix runtime error on unsupported HTTP protocol
+      due to missing Connection header. Reported by
+      Marco Boeri with fix, though the fix was reshaped
+      a bit.
+
+  * config/bsd/global.mk
+    ! don't hardcode "gmake" if Harbour is cross-compiled
+      to this platform from another one
+
+2026-09-01 15:52 UTC+0200 Aleksander Czajczynski (hb fki.pl)
+  * contrib/hbfbird/firebird.c
+  * contrib/hbfbird/tfirebrd.prg
+    ! fix desync between C and .prg source codes when parsing the date.
+      I'm keeping ISO 8601 date format in case someone uses "raw"
+      FBGetData() function to dump or pass-trough data to another SQL server.
+      Reported by Kamil Przybylski in #413 with slightly different fix.
+
 2026-08-27 20:22 UTC+0200 Aleksander Czajczynski (hb fki.pl)
   * contrib/3rd/sqlite3/sqlite3.c
   * contrib/3rd/sqlite3/sqlite3.diff
