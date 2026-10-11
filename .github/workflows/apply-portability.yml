@@ -1,0 +1,42 @@
+name: Apply Harbour portability fix
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: harbour-portability-fix
+  cancel-in-progress: false
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/upstream-20261011
+          fetch-depth: 0
+      - name: Apply fixed-scope patch
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib
+          import subprocess
+          expected = '8c871c88bc7ab706f88bb8d3399bf5de74912121'
+          assert subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() == expected
+          patch = '--- a/src/rdd/dbf1.c\n+++ b/src/rdd/dbf1.c\n@@ -63,7 +63,6 @@\n #include "hbapicdp.h"\n \n \n-static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;\n static RDDFUNCS  dbfSuper;\n \n \n@@ -6642,7 +6641,6 @@\n       hb_xfree( pRDD->lpvCargo );\n       pRDD->lpvCargo = NULL;\n    }\n-   s_uiRddId = ( HB_USHORT ) -1;\n \n    if( ISSUPER_EXIT( pRDD ) )\n       return SUPER_EXIT( pRDD );\n@@ -6959,11 +6957,10 @@\n HB_FUNC_STATIC( DBF_GETFUNCTABLE )\n {\n    RDDFUNCS * pTable;\n-   HB_USHORT * puiCount, uiRddId;\n+   HB_USHORT * puiCount;\n \n    puiCount = ( HB_USHORT * ) hb_parptr( 1 );\n    pTable = ( RDDFUNCS * ) hb_parptr( 2 );\n-   uiRddId = ( HB_USHORT ) hb_parni( 4 );\n \n    HB_TRACE( HB_TR_DEBUG, ( "DBF_GETFUNCTABLE(%p, %p)", ( void * ) puiCount, ( void * ) pTable ) );\n \n@@ -6975,14 +6972,6 @@\n          *puiCount = RDDFUNCSCOUNT;\n       errCode = hb_rddInheritEx( pTable, &dbfTable, &dbfSuper, NULL, NULL );\n       hb_retni( errCode );\n-      if( errCode == HB_SUCCESS )\n-      {\n-         /*\n-          * we successfully register our RDD so now we can initialize it\n-          * You may think that this place is RDD init statement, Druzus\n-          */\n-         s_uiRddId = uiRddId;\n-      }\n    }\n    else\n       hb_retni( HB_FAILURE );\n--- a/src/rdd/dbfcdx/dbfcdx1.c\n+++ b/src/rdd/dbfcdx/dbfcdx1.c\n@@ -120,7 +120,6 @@\n /* free create index structure */\n static void hb_cdxSortFree( LPCDXSORTINFO pSort );\n \n-static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;\n \n static RDDFUNCS cdxSuper;\n \n@@ -9998,11 +9997,10 @@\n HB_FUNC_STATIC( _GETFUNCTABLE )\n {\n    RDDFUNCS * pTable;\n-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;\n+   HB_USHORT * puiCount, * puiSuperRddId;\n \n    puiCount = ( HB_USHORT * ) hb_parptr( 1 );\n    pTable = ( RDDFUNCS * ) hb_parptr( 2 );\n-   uiRddId = ( HB_USHORT ) hb_parni( 4 );\n    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );\n \n    HB_TRACE( HB_TR_DEBUG, ( HB_CDXRDD "_GETFUNCTABLE(%p, %p)", ( void * ) puiCount, ( void * ) pTable ) );\n@@ -10018,14 +10016,6 @@\n          errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBFDBT", puiSuperRddId );\n       if( errCode != HB_SUCCESS )\n          errCode = hb_rddInheritEx( pTable, &cdxTable, &cdxSuper, "DBF", puiSuperRddId );\n-      if( errCode == HB_SUCCESS )\n-      {\n-         /*\n-          * we successfully register our RDD so now we can initialize it\n-          * You may think that this place is RDD init statement, Druzus\n-          */\n-         s_uiRddId = uiRddId;\n-      }\n       hb_retni( errCode );\n    }\n    else\n--- a/src/rdd/dbfntx/dbfntx1.c\n+++ b/src/rdd/dbfntx/dbfntx1.c\n@@ -147,7 +147,6 @@\n #endif\n \n static RDDFUNCS  ntxSuper;\n-static HB_USHORT s_uiRddId;\n \n /* temporary casts to suppress 32/64-bit Windows warnings */\n #define HB_SHORTCAST   HB_SHORT\n@@ -7913,11 +7912,10 @@\n HB_FUNC_STATIC( DBFNTX_GETFUNCTABLE )\n {\n    RDDFUNCS * pTable;\n-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;\n+   HB_USHORT * puiCount, * puiSuperRddId;\n \n    puiCount = ( HB_USHORT * ) hb_parptr( 1 );\n    pTable = ( RDDFUNCS * ) hb_parptr( 2 );\n-   uiRddId = ( HB_USHORT ) hb_parni( 4 );\n    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );\n \n    if( pTable )\n@@ -7931,14 +7929,6 @@\n          errCode = hb_rddInheritEx( pTable, &ntxTable, &ntxSuper, "DBFDBT", puiSuperRddId );\n       if( errCode != HB_SUCCESS )\n          errCode = hb_rddInheritEx( pTable, &ntxTable, &ntxSuper, "DBF", puiSuperRddId );\n-      if( errCode == HB_SUCCESS )\n-      {\n-         /*\n-          * we successfully register our RDD so now we can initialize it\n-          * You may think that this place is RDD init statement, Druzus\n-          */\n-         s_uiRddId = uiRddId;\n-      }\n       hb_retni( errCode );\n    }\n    else\n--- a/src/rdd/dbfnsx/dbfnsx1.c\n+++ b/src/rdd/dbfnsx/dbfnsx1.c\n@@ -67,7 +67,6 @@\n #include "hbregex.h"\n \n static RDDFUNCS  nsxSuper;\n-static HB_USHORT s_uiRddId;\n \n /* temporary casts to suppress 32/64-bit Windows warnings */\n #define HB_USHORTCAST  HB_USHORT\n@@ -8218,11 +8217,10 @@\n HB_FUNC_STATIC( DBFNSX_GETFUNCTABLE )\n {\n    RDDFUNCS * pTable;\n-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;\n+   HB_USHORT * puiCount, * puiSuperRddId;\n \n    puiCount = ( HB_USHORT * ) hb_parptr( 1 );\n    pTable = ( RDDFUNCS * ) hb_parptr( 2 );\n-   uiRddId = ( HB_USHORT ) hb_parni( 4 );\n    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );\n \n    if( pTable )\n@@ -8234,14 +8232,6 @@\n       errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBFFPT", puiSuperRddId );\n       if( errCode != HB_SUCCESS )\n          errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBF", puiSuperRddId );\n-      if( errCode == HB_SUCCESS )\n-      {\n-         /*\n-          * we successfully register our RDD so now we can initialize it\n-          * You may think that this place is RDD init statement, Druzus\n-          */\n-         s_uiRddId = uiRddId;\n-      }\n       hb_retni( errCode );\n    }\n    else\n--- a/src/rtl/gtpca/gtpca.c\n+++ b/src/rtl/gtpca/gtpca.c\n@@ -107,7 +107,6 @@\n static HB_SIZE      s_nTransBufSize = 0;\n static char *       s_sTransBuf;\n static const char * s_szCrLf;\n-static HB_SIZE      s_nCrLf;\n static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;\n static int          s_iCursorStyle;\n static HB_BOOL      s_bStdinConsole;\n@@ -469,7 +468,6 @@\n    s_fDispTrans = HB_FALSE;\n \n    s_szCrLf = hb_conNewLine();\n-   s_nCrLf = strlen( s_szCrLf );\n \n    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );\n \n'
+          subprocess.run(["git","apply","--check","-"],input=patch,text=True,check=True)
+          subprocess.run(["git","apply","-"],input=patch,text=True,check=True)
+          expected_files = ['src/rdd/dbf1.c', 'src/rdd/dbfcdx/dbfcdx1.c', 'src/rdd/dbfntx/dbfntx1.c', 'src/rdd/dbfnsx/dbfnsx1.c', 'src/rtl/gtpca/gtpca.c']
+          changed = subprocess.check_output(["git","diff","--name-only"],text=True).splitlines()
+          assert sorted(changed) == sorted(expected_files)
+      - name: Build core with warnings as errors
+        run: make -j2 HB_COMPILER=gcc HB_BUILD_CONTRIBS=no HB_USER_CFLAGS=-Werror
+      - name: Test core
+        run: bin/linux/gcc/hbtest
+      - name: Commit only the reviewed portability fix
+        run: |
+          git diff --check
+          git config user.name "FiveTech AI"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/rdd/dbf1.c src/rdd/dbfcdx/dbfcdx1.c src/rdd/dbfntx/dbfntx1.c src/rdd/dbfnsx/dbfnsx1.c src/rtl/gtpca/gtpca.c
+          git commit -m "Remove unused RDD and console bookkeeping"
+          git push origin HEAD:integration/upstream-20261011
