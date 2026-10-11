@@ -16,10 +16,10 @@ layout: default
 {%- if site.fork %}
 <h1 id="this-fork">This Fork</h1>
 <div class="text-j"><p>
-  This fork contains all <a href="https://harbour.github.io/">mainline</a>
-  updates as well as local fixes, additions, extra contribs, better tooling
-  and maintenance.
-  <a href="{{ site.baseurl }}/forks{{ site.ilink_suffix }}" class="readmore">Learn more</a>
+  FiveTechSoft maintains this Harbour fork. Source changes are tested before
+  they are promoted to master. Stable upstream releases are linked separately
+  from this fork's development sources.
+</p>
 </div>
 {%- endif %}
 
@@ -37,37 +37,29 @@ layout: default
   <div class="status-box">
     <h1 id="project-status">Project Status</h1>
     <p>
-{%- if site.fork %}
-      <a href="https://ci.appveyor.com/project/vsz/hb/branch/main"><img src="https://ci.appveyor.com/api/projects/status/4rd806hk73q83qo4/branch/main?svg=true" height="20" alt="Build Status"></a>
-{%- else %}
       <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/linux-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/linux-ci.yml/badge.svg" height="20" alt="Linux CI"></a>&nbsp;
       <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/windows-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/windows-ci.yml/badge.svg" height="20" alt="Windows CI"></a>&nbsp;
       <a href="https://github.com/{{ site.repo_slug }}/actions/workflows/macos-ci.yml"><img src="https://github.com/{{ site.repo_slug }}/actions/workflows/macos-ci.yml/badge.svg" height="20" alt="macOS CI"></a>
-{%- endif %}
+
       <br>
-      Latest stable:&nbsp;
+      Upstream stable:&nbsp;
       <strong>{{ site.stable_version }}</strong>&nbsp;({{ site.stable_date }})&nbsp;
       <a href="{{ site.stable_source_url }}"><strong>.tar.gz</strong></a><br>
       Latest development:&nbsp;
-      <strong>{% if site.fork %}{{ site.full_version }}{% else %}{{ site.dev_version }}{% endif %}</strong><br>
+      <strong>{{ site.dev_version }}</strong><br>
       Source snapshot:&nbsp;
       <a href="https://github.com/{{ site.repo_slug }}/archive/{{ site.repo_branch }}.zip"><strong>.zip</strong></a>&nbsp;
       <a href="https://github.com/{{ site.repo_slug }}/archive/{{ site.repo_branch }}.tar.gz"><strong>.tar.gz</strong></a><br>
-{%- if site.fork %}
-      Binary snapshot (Windows):&nbsp;
-      <a href="{{ site.dl_url }}/download/v{{ site.full_version }}/harbour-snapshot-win.zip" tooltip-text="clang / mingw-w64, 64-bit hosted, 32/64-bit targets, bundled with latest curl and TLS/SSL libraries." class="tooltip"><strong>.zip</strong></a><br>
-      Binaries:&nbsp;
-      <a href="{{ site.binaries_url }}"><strong>Harbour_builder</strong></a>
-{%- else %}
+
       Binaries:&nbsp;
       <a href="{{ site.binaries_url }}"><strong>Harbour_builder</strong></a><br>
       GitHub:&nbsp;
-      <a href="{{ site.releases_url }}"><strong>Releases</strong></a>&nbsp;
+      <a href="{{ site.releases_url }}"><strong>Upstream releases</strong></a>&nbsp;
       <a href="https://github.com/{{ site.repo_slug }}"><strong>Source</strong></a><br>
-{%- endif %}
+
     </p>
     <span class="dl-button"><a href="{{ site.binaries_url }}" class="readmore-norm">Download Binaries</a></span>
-    <span class="dl-button"><a href="{{ site.releases_url }}" class="readmore-norm">GitHub Releases</a></span>
+    <span class="dl-button"><a href="{{ site.releases_url }}" class="readmore-norm">Upstream Releases</a></span>
   </div>
 </div>
 
