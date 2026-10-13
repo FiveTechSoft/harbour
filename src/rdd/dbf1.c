@@ -63,7 +63,6 @@
 #include "hbapicdp.h"
 
 
-static HB_USHORT s_uiRddId = ( HB_USHORT ) -1;
 static RDDFUNCS  dbfSuper;
 
 
@@ -6642,7 +6641,6 @@ static HB_ERRCODE hb_dbfExit( LPRDDNODE pRDD )
       hb_xfree( pRDD->lpvCargo );
       pRDD->lpvCargo = NULL;
    }
-   s_uiRddId = ( HB_USHORT ) -1;
 
    if( ISSUPER_EXIT( pRDD ) )
       return SUPER_EXIT( pRDD );
@@ -6959,11 +6957,10 @@ HB_FUNC( _DBF ) { ; }
 HB_FUNC_STATIC( DBF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * puiCount, uiRddId;
+   HB_USHORT * puiCount;
 
    puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    HB_TRACE( HB_TR_DEBUG, ( "DBF_GETFUNCTABLE(%p, %p)", ( void * ) puiCount, ( void * ) pTable ) );
 
@@ -6975,14 +6972,6 @@ HB_FUNC_STATIC( DBF_GETFUNCTABLE )
          *puiCount = RDDFUNCSCOUNT;
       errCode = hb_rddInheritEx( pTable, &dbfTable, &dbfSuper, NULL, NULL );
       hb_retni( errCode );
-      if( errCode == HB_SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
    }
    else
       hb_retni( HB_FAILURE );
