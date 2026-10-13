@@ -67,7 +67,6 @@
 #include "hbregex.h"
 
 static RDDFUNCS  nsxSuper;
-static HB_USHORT s_uiRddId;
 
 /* temporary casts to suppress 32/64-bit Windows warnings */
 #define HB_USHORTCAST  HB_USHORT
@@ -8218,11 +8217,10 @@ HB_FUNC_TRANSLATE( DBFNSX, _DBF )
 HB_FUNC_STATIC( DBFNSX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
+   HB_USHORT * puiCount, * puiSuperRddId;
 
    puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if( pTable )
@@ -8234,14 +8232,6 @@ HB_FUNC_STATIC( DBFNSX_GETFUNCTABLE )
       errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBFFPT", puiSuperRddId );
       if( errCode != HB_SUCCESS )
          errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBF", puiSuperRddId );
-      if( errCode == HB_SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
       hb_retni( errCode );
    }
    else

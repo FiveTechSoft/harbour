@@ -65,6 +65,14 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
    #define HB_STATIC_STARTUP
 #endif
 
+/* Native modules can register symbols without reading the returned pointer.
+ * Generated code still uses it when accessing module symbols. */
+#if defined( __clang__ )
+   #define HB_INIT_SYMBOLS_UNUSED __attribute__ ((unused))
+#else
+   #define HB_INIT_SYMBOLS_UNUSED
+#endif
+
 #define HB_INIT_SYMBOLS_COUNT ( sizeof( symbols_table ) / sizeof( HB_SYMB ) )
 
 #if defined( HB_STRICT_ANSI_C )
@@ -74,7 +82,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = symbols_table; \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
       void func( void ) \
       { \
          symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
@@ -98,7 +106,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
       static int func( void ) \
@@ -131,7 +139,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = symbols_table; \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
       HB_CALL_ON_STARTUP_BEGIN( func ) \
          symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
       HB_CALL_ON_STARTUP_END( func )
@@ -176,7 +184,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
    #if defined( __DCC__ )
       #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
          }; \
-         static PHB_SYMB symbols = symbols_table; \
+         static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
          void __attribute__ ((constructor)) func( void ) \
          { \
             symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
@@ -188,7 +196,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
    #else
       #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
          }; \
-         static PHB_SYMB symbols = symbols_table; \
+         static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
          static void __attribute__ ((constructor)) func( void ) \
          { \
             symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
@@ -215,7 +223,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = symbols_table; \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
       static void func( void ) \
       { \
          symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
@@ -243,7 +251,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = symbols_table; \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
       static int func( void ) \
       { \
          symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \
@@ -279,7 +287,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = symbols_table; \
+      static PHB_SYMB symbols HB_INIT_SYMBOLS_UNUSED = symbols_table; \
       static void func( void ) \
       { \
          symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) HB_INIT_SYMBOLS_COUNT, (module), (id), (vpcode) ); \

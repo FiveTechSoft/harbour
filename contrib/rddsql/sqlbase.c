@@ -57,7 +57,6 @@
 
 #define CONNECTION_LIST_EXPAND  4
 
-static HB_USHORT s_rddidSQLBASE = 0;
 
 static SQLDDCONNECTION ** s_pConnection = NULL;
 static HB_ULONG s_ulConnectionCount     = 0;
@@ -1238,11 +1237,10 @@ HB_FUNC( SQLBASE )
 HB_FUNC_STATIC( SQLBASE_GETFUNCTABLE )
 {
    RDDFUNCS *  pTable;
-   HB_USHORT * puiCount, uiRddId;
+   HB_USHORT * puiCount;
 
    puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable   = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId  = ( HB_USHORT ) hb_parni( 4 );
 
    if( pTable )
    {
@@ -1252,8 +1250,6 @@ HB_FUNC_STATIC( SQLBASE_GETFUNCTABLE )
          *puiCount = RDDFUNCSCOUNT;
 
       errCode = hb_rddInheritEx( pTable, &sqlbaseTable, &sqlbaseSuper, NULL, NULL );
-      if( errCode == HB_SUCCESS )
-         s_rddidSQLBASE = uiRddId;
 
       hb_retni( errCode );
    }

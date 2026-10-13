@@ -85,8 +85,6 @@
    memmove( &( ( ndst )->Child[ ( dst ) ] ), &( ( nsrc )->Child[ ( src ) ] ), ( count ) * sizeof( void * ) )
 
 
-static HB_USHORT s_uiRddIdSQLMIX = ( HB_USHORT ) -1;
-
 static RDDFUNCS sqlmixSuper;
 
 
@@ -2100,11 +2098,10 @@ HB_FUNC_TRANSLATE( SQLMIX, SQLBASE )
 HB_FUNC_STATIC( SQLMIX_GETFUNCTABLE )
 {
    RDDFUNCS *  pTable;
-   HB_USHORT * puiCount, * puiSuperRddId, uiRddId;
+   HB_USHORT * puiCount, * puiSuperRddId;
 
    puiCount      = ( HB_USHORT * ) hb_parptr( 1 );
    pTable        = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId       = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if( pTable )
@@ -2115,8 +2112,6 @@ HB_FUNC_STATIC( SQLMIX_GETFUNCTABLE )
          *puiCount = RDDFUNCSCOUNT;
 
       errCode = hb_rddInheritEx( pTable, &sqlmixTable, &sqlmixSuper, "SQLBASE", puiSuperRddId );
-      if( errCode == HB_SUCCESS )
-         s_uiRddIdSQLMIX = uiRddId;
       hb_retni( errCode );
    }
    else
