@@ -200,8 +200,6 @@ static int         s_iUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
 static HB_SIZE     s_nScreenBuffSize = 0;
 
-static HB_FHANDLE  s_hStdIn, s_hStdOut, s_hStdErr;
-
 static HANDLE      s_HInput  = INVALID_HANDLE_VALUE;
 static HANDLE      s_HOutput = INVALID_HANDLE_VALUE;
 static DWORD       s_dwimode, s_dwomode;
@@ -728,11 +726,6 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_fWin9x = hb_iswin9x();
-
-   /* stdin && stdout && stderr */
-   s_hStdIn  = hFilenoStdin;
-   s_hStdOut = hFilenoStdout;
-   s_hStdErr = hFilenoStderr;
 
    s_fMouseEnable = HB_TRUE;
    s_fBreak = s_fSuspend =
